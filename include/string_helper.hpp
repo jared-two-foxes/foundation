@@ -11,27 +11,19 @@
 namespace foundation
 {
 
+inline auto toString( float const& f ) -> std::string {
+	std::stringstream stream;
+	stream << std::fixed << std::setprecision(2) << f;
+	return stream.str();
+}
 
-// template <typename T >
-// std::string cast( T const& o );
-//
-// inline std::string cast( float const& o ) {
-//     std::stringstream stream;
-//     stream << std::fixed << std::setprecision(2) << o;
-//     return stream.str();
-// }
-//
-// inline std::string cast( std::string const& o ) {
-//     return std::string( o );
-// }
-
-inline auto toString(std::string const& x) -> std::string {
+inline auto toString( std::string const& x ) -> std::string {
 	return x;
 }
 
 template <class T>
-auto toString(T const& x) ->decltype(std::to_string(x)) {
-	return std::to_string(x);
+auto toString( T const& x ) ->decltype(std::to_string(x)) {
+	return std::to_string( x );
 }
 
 

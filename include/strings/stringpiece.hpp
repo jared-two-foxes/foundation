@@ -139,51 +139,22 @@ namespace foundation {
 //
 typedef string::difference_type stringpiece_ssize_type;
 
-// STRINGPIECE_CHECK_SIZE protects us from 32-bit overflows.
-// TODO(user): delete this after stringpiece_ssize_type goes 64 bit.
-#if !defined(NDEBUG)
-#define STRINGPIECE_CHECK_SIZE 1
-#elif defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0
-#define STRINGPIECE_CHECK_SIZE 1
-#else
-#define STRINGPIECE_CHECK_SIZE 0
-#endif
 
 class StringPiece {
  private:
   const char* ptr_;
   stringpiece_ssize_type length_;
 
-  // Prevent overflow in debug mode or fortified mode.
-  // sizeof(stringpiece_ssize_type) may be smaller than sizeof(size_t).
-  static stringpiece_ssize_type CheckedSsizeTFromSizeT(size_t size) {
-#if STRINGPIECE_CHECK_SIZE > 0
-    if (size > static_cast<size_t>(
-        std::numeric_limits<stringpiece_ssize_type>::max())) {
-      // Some people grep for this message in logs
-      // so take care if you ever change it.
-      LogFatalSizeTooBig(size, "size_t to int conversion");
-    }
-#endif
-    return static_cast<stringpiece_ssize_type>(size);
-  }
-
-  // Out-of-line error path.
-  static void LogFatalSizeTooBig(size_t size, const char* details);
-
  public:
   // We provide non-explicit singleton constructors so users can pass
   // in a "const char*" or a "string" wherever a "StringPiece" is
   // expected.
-  //
-  // Style guide exception granted:
-  // http://goto/style-guide-exception-20978288
   StringPiece() : ptr_(NULL), length_(0) {}
 
   StringPiece(const char* str)  // NOLINT(runtime/explicit)
       : ptr_(str), length_(0) {
     if (str != NULL) {
-      length_ = CheckedSsizeTFromSizeT(strlen(str));
+      length_ = strlen(str);
     }
   }
 
@@ -191,17 +162,8 @@ class StringPiece {
   StringPiece(const std::basic_string<char, std::char_traits<char>,
               Allocator> &str)  // NOLINT(runtime/explicit)
       : ptr_(str.data()), length_(0) {
-    length_ = CheckedSsizeTFromSizeT(str.size());
+    length_ = str.size();
   }
-
-#if defined(HAS_GLOBAL_STRING)
-  template <class Allocator>
-  StringPiece(const basic_string<char, std::char_traits<char>,
-              Allocator> &str)  // NOLINT(runtime/explicit)
-      : ptr_(str.data()), length_(0) {
-    length_ = CheckedSsizeTFromSizeT(str.size());
-  }
-#endif
 
   StringPiece(const char* offset, stringpiece_ssize_type len)
       : ptr_(offset), length_(len) {
@@ -241,7 +203,7 @@ class StringPiece {
   void set(const char* str) {
     ptr_ = str;
     if (str != NULL)
-      length_ = CheckedSsizeTFromSizeT(strlen(str));
+      length_ = strlen(str);
     else
       length_ = 0;
   }

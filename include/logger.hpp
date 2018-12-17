@@ -24,8 +24,12 @@ public:
 
 void ClearLoggers();
 void RegisterLogger( Logger* logger, int threshold );
-
 void Log( int level, std::string const& line );
 
+inline void ConditionalLog( bool conditional, int level, std::string const& line ) {
+  if (conditional) {
+    Log( level, line );
+  }
+}
 
 #endif // FOUNDATION_LOGGER_HPP__

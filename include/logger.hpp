@@ -24,11 +24,19 @@ public:
 
 void ClearLoggers();
 void RegisterLogger( Logger* logger, int threshold );
-void Log( int level, std::string const& line );
+void SendToLogger( int level, std::string const& line );
 
-inline void ConditionalLog( bool conditional, int level, std::string const& line ) {
+template <typename... Args >
+inline void Log( int level, char const * line, Args... args ) {
+  char buffer[256];
+  snprintf( buffer, 255, line, args... );
+  SendToLogger( level, buffer );
+}
+
+template <typename... Args >
+inline void ConditionalLog( bool conditional, int level, char const * line, Args... args ) {
   if (conditional) {
-    Log( level, line );
+    Log( level, line, args... );
   }
 }
 

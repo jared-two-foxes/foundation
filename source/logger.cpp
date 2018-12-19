@@ -29,7 +29,7 @@ void RegisterLogger( Logger* logger, int threshold )
   loggers.push_back( std::make_pair(logger, threshold) );
 }
 
-void Log( int level, std::string const& line )
+void SendToLogger( int level, std::string const& line )
 {
   //Locker lock(muxtex);
 

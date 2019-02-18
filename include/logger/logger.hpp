@@ -26,10 +26,17 @@ void ClearLoggers();
 void RegisterLogger( Logger* logger, int threshold );
 void SendToLogger( int level, std::string const& line );
 
+
 template <typename... Args >
 inline void Log( int level, char const * line, Args... args ) {
   char buffer[256];
   snprintf( buffer, 255, line, args... );
+  SendToLogger( level, buffer );
+}
+
+inline void Log( int level, char const * line ) {
+  char buffer[256];
+  snprintf( buffer, 255, "%s", line );
   SendToLogger( level, buffer );
 }
 

@@ -1,13 +1,13 @@
 #ifndef TIMER_HPP__
 #define TIMER_HPP__
 
-#include <foundation/uuid.hpp>
+#include <foundation/uuid/uuid.hpp>
 
 #include <functional>
 
-enum class TimerType 
+enum class TimerType
 {
-  ONE_SHOT, 
+  ONE_SHOT,
   CYCLE
 };
 

@@ -17,7 +17,6 @@ auto map( Function&& fn, std::vector<T > const & xs ) -> std::vector<decltype(fn
     return out;
 }
 
-
 template <typename T, typename Function >
 T filter( Function&& fn, T const & xs ) {
     T out;

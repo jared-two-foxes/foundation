@@ -1,5 +1,5 @@
 
-#include <foundation/logger.hpp>
+#include <foundation/logger/logger.hpp>
 
 #include <iostream>
 #include <vector>
